@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/patient/profile', [App\Http\Controllers\PatientProfileController::class, 'edit'])->name('patient.profile');
     Route::post('/patient/profile', [App\Http\Controllers\PatientProfileController::class, 'update']);
+
+    Route::get('/doctor/visits', [App\Http\Controllers\DoctorProfileController::class, 'show'])->name('doctor.visits');
 });
 
 // // Panel profilu
