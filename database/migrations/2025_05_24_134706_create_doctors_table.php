@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign(columns: 'user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('specialization');
-            $table->string('license_number');
+            $table->string('specialization')->nullable();
+            $table->string('license_number')->nullable();
         });
     }
 

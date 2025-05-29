@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign(columns: 'user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('pesel', 11);
-            $table->date('birth_date');
-            $table->string('phone_number');
-            $table->string('addres');
+            $table->string('pesel', 11)->nullable();
+            $table->date('birth_date')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('address')->nullable();
         });
     }
 

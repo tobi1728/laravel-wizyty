@@ -17,7 +17,7 @@ class Patient extends Model
         'pesel',
         'birth_date',
         'phone_number',
-        'addres',
+        'address',
     ];
 
 

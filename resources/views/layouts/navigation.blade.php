@@ -34,9 +34,18 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                    @php
+                        $role = Auth::user()->role;
+                        $profileRoute = match ($role) {
+                            'admin' => route('admin.profile'),
+                            'doctor' => route('doctor.profile'),
+                            default => route('patient.profile'),
+                        };
+                    @endphp
+
+                    <x-dropdown-link :href="$profileRoute">
+                        {{ __('Profil') }}
+                    </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -80,9 +89,18 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+            @php
+                $role = Auth::user()->role;
+                $profileRoute = match ($role) {
+                    'admin' => route('admin.profile'),
+                    'doctor' => route('doctor.profile'),
+                    default => route('patient.profile'),
+                };
+            @endphp
+
+            <x-responsive-nav-link :href="$profileRoute">
+                {{ __('Profil') }}
+            </x-responsive-nav-link>
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
