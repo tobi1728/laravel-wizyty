@@ -27,11 +27,26 @@ Route::middleware('auth')->group(function () {
     Route::view('/patient/dashboard', 'patient.dashboard')->name('patient.dashboard');
 });
 
-// Panel profilu
+// Profile osobno dla ról
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/admin/profile', function () {
+        return view('admin.profile');
+    })->name('admin.profile');
+
+    Route::get('/doctor/profile', [App\Http\Controllers\DoctorProfileController::class, 'edit'])->name('doctor.profile');
+    Route::post('/doctor/profile', [App\Http\Controllers\DoctorProfileController::class, 'update']);
+
+    Route::get('/patient/profile', [App\Http\Controllers\PatientProfileController::class, 'edit'])->name('patient.profile');
+    Route::post('/patient/profile', [App\Http\Controllers\PatientProfileController::class, 'update']);
+});
+
+// // Panel profilu
+Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::patch('/admin/profile', [ProfileController::class, 'updateAdmin'])->name('admin.profile.update');
+
 });
 
 // Trasy logowania/rejestracji

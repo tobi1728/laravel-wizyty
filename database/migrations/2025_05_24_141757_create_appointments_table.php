@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('patient_id')->nullable();
             $table->unsignedBigInteger('doctor_id');
             $table->dateTime('appointment_date');
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->unsignedBigInteger('appointment_status_id');
 
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
