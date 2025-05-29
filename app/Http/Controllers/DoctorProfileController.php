@@ -15,6 +15,14 @@ class DoctorProfileController extends Controller
         return view('doctor.profile', compact('doctor'));
     }
 
+        public function show()
+    {
+        $doctor = Auth::user()->doctor;
+
+        return view('doctor.visits', compact('doctor'));
+    }
+
+
     public function update(Request $request)
     {
         $request->validate([
