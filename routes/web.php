@@ -1,9 +1,15 @@
 <?php
 
-use App\Http\Controllers\PrescriptionController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DoctorDashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\DoctorProfileController;
+use App\Http\Controllers\PatientProfileController;
+use App\Http\Controllers\DoctorScheduleController;
+use App\Http\Controllers\DoctorAppointmentsController;
 
 // Strona powitalna
 Route::get('/', function () {
@@ -21,56 +27,73 @@ Route::middleware('auth')->get('/dashboard', function () {
     };
 })->name('dashboard');
 
-// Osobne panele dla ról – wskazują na admin/dashboard.blade.php itd.
+// Panele główne dla ról
 Route::middleware('auth')->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
-    Route::view('/doctor/dashboard', 'doctor.dashboard')->name('doctor.dashboard');
+Route::get('/doctor/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
     Route::view('/patient/dashboard', 'patient.dashboard')->name('patient.dashboard');
 });
 
-// Profile osobno dla ról
+// Profile i funkcje wspólne
 Route::middleware('auth')->group(function () {
+    // Profile
     Route::get('/admin/profile', function () {
         return view('admin.profile');
     })->name('admin.profile');
 
-    Route::get('/doctor/profile', [App\Http\Controllers\DoctorProfileController::class, 'edit'])->name('doctor.profile');
-    Route::post('/doctor/profile', [App\Http\Controllers\DoctorProfileController::class, 'update']);
+    Route::patch('/admin/profile', [ProfileController::class, 'updateAdmin'])->name('admin.profile.update');
 
-    Route::get('/patient/profile', [App\Http\Controllers\PatientProfileController::class, 'edit'])->name('patient.profile');
-    Route::post('/patient/profile', [App\Http\Controllers\PatientProfileController::class, 'update']);
+    Route::get('/doctor/profile', [DoctorProfileController::class, 'edit'])->name('doctor.profile');
+    Route::post('/doctor/profile', [DoctorProfileController::class, 'update']);
 
-    Route::get('/doctor/visits', [App\Http\Controllers\DoctorProfileController::class, 'show'])->name('doctor.visits');
+    Route::get('/patient/profile', [PatientProfileController::class, 'edit'])->name('patient.profile');
+    Route::post('/patient/profile', [PatientProfileController::class, 'update']);
 
-    Route::get('/doctor/addschedule', [App\Http\Controllers\DoctorScheduleController::class, 'addSchedule'])->name('doctor.addschedule');
-    Route::post('/doctor/addschedule', [App\Http\Controllers\DoctorScheduleController::class, 'postSchedule']);
-    
-    Route::get('/doctor/schedules', [App\Http\Controllers\DoctorScheduleController::class, 'showAll'])->name('doctor.schedules');
+    // Dodatkowe dane lekarza
+    Route::get('/doctor/visits', [DoctorProfileController::class, 'show'])->name('doctor.visits');
 
-Route::prefix('doctor/prescriptions')->group(function () {
-    Route::get('/', [PrescriptionController::class, 'index'])->name('prescriptions.index');
-    Route::get('/addprescription', [PrescriptionController::class, 'addPrescription'])->name('prescriptions.addPrescription');
-    Route::post('/store', [PrescriptionController::class, 'store'])->name('prescriptions.store');
-    Route::get('/{id}', [PrescriptionController::class, 'show'])->name('prescriptions.show');
-    Route::get('/{id}/edit', [PrescriptionController::class, 'edit'])->name('prescriptions.edit');
-    Route::put('/{id}', [PrescriptionController::class, 'update'])->name('prescriptions.update');
-    Route::delete('/{id}', [PrescriptionController::class, 'destroy'])->name('prescriptions.destroy');
-Route::get('/{id}/export', [PrescriptionController::class, 'exportPdf'])->name('prescriptions.export');
+    // Grafik
+    Route::get('/doctor/addschedule', [DoctorScheduleController::class, 'addSchedule'])->name('doctor.addschedule');
+    Route::post('/doctor/addschedule', [DoctorScheduleController::class, 'postSchedule']);
+    Route::get('/doctor/schedules', [DoctorScheduleController::class, 'showAll'])->name('doctor.schedules');
+
+    // Recepty
+    Route::prefix('doctor/prescriptions')->group(function () {
+        Route::get('/', [PrescriptionController::class, 'index'])->name('prescriptions.index');
+        Route::get('/addprescription', [PrescriptionController::class, 'addPrescription'])->name('prescriptions.addPrescription');
+        Route::post('/store', [PrescriptionController::class, 'store'])->name('prescriptions.store');
+        Route::get('/{id}', [PrescriptionController::class, 'show'])->name('prescriptions.show');
+        Route::get('/{id}/edit', [PrescriptionController::class, 'edit'])->name('prescriptions.edit');
+        Route::put('/{id}', [PrescriptionController::class, 'update'])->name('prescriptions.update');
+        Route::delete('/{id}', [PrescriptionController::class, 'destroy'])->name('prescriptions.destroy');
+        Route::get('/{id}/export', [PrescriptionController::class, 'exportPdf'])->name('prescriptions.export');
+    });
+
+    // Skierowania
+Route::prefix('doctor/referrals')->group(function () {
+    Route::get('/', [ReferralController::class, 'index'])->name('referrals.index');
+    Route::get('/create', [ReferralController::class, 'create'])->name('referrals.create');
+    Route::post('/', [ReferralController::class, 'store'])->name('referrals.store');
+    Route::get('/{id}/edit', [ReferralController::class, 'edit'])->name('referrals.edit');
+    Route::put('/{id}', [ReferralController::class, 'update'])->name('referrals.update');
+    Route::delete('/{id}', [ReferralController::class, 'destroy'])->name('referrals.destroy');
+    Route::get('/{id}/pdf', [ReferralController::class, 'pdf'])->name('referrals.pdf');
 });
 
-    Route::get('/doctor/appointments/free', [App\Http\Controllers\DoctorAppointmentsController::class, 'showFreeAppointments'])->name('doctor.freeappointments');
-    Route::get('/doctor/appointments/next', [App\Http\Controllers\DoctorAppointmentsController::class, 'showNextAppointments'])->name('doctor.nextappointments');
-    Route::get('/doctor/appointments/historic', [App\Http\Controllers\DoctorAppointmentsController::class, 'showHistoricAppointments'])->name('doctor.historicappointments');
+// Wizyty
+Route::prefix('doctor/appointments')->group(function () {
+    Route::get('/free', [DoctorAppointmentsController::class, 'showFreeAppointments'])->name('doctor.freeappointments');
+    Route::get('/next', [DoctorAppointmentsController::class, 'showNextAppointments'])->name('doctor.nextappointments');
+    Route::get('/historic', [DoctorAppointmentsController::class, 'showHistoricAppointments'])->name('doctor.historicappointments');
+
+    Route::get('/{id}/edit', [DoctorAppointmentsController::class, 'edit'])->name('appointments.edit');
+    Route::put('/{id}', [DoctorAppointmentsController::class, 'update'])->name('appointments.update');
+    Route::delete('/{id}', [DoctorAppointmentsController::class, 'destroy'])->name('appointments.destroy');
 });
 
-// // Panel profilu
-Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-Route::patch('/admin/profile', [ProfileController::class, 'updateAdmin'])->name('admin.profile.update');
-
 });
 
-// Trasy logowania/rejestracji
+
+
+// Autoryzacja
 require __DIR__.'/auth.php';
