@@ -93,10 +93,11 @@
             });
 
             doctor.addEventListener('change', function () {
+                console.log(this.value);
                 fetch(`/patient/appointments/api/dates/${this.value}`)
                     .then(res => res.json())
                     .then(data => {
-                        if (data.length = 0) {
+                        // if (data.length = 0) {
                             console.log(data);
                             day.innerHTML = `<option value="">-- wybierz dzień --</option>`;
                             data.forEach(d => {
@@ -105,10 +106,11 @@
                             day.disabled = false;
                             time.innerHTML = '<option value="">-- wybierz dzień --</option>';
                             time.disabled = true;
-                        } else {
-                            day.innerHTML = `<option value="">Brak wolnych terminów</option>`;
-                            time.innerHTML = '<option value="">Brak wolnych terminów</option>';
-                        }
+                        // } else {
+                        //     console.log(data);
+                        //     day.innerHTML = `<option value="">Brak wolnych terminów</option>`;
+                        //     time.innerHTML = '<option value="">Brak wolnych terminów</option>';
+                        // }
                     });
             });
 
