@@ -1,15 +1,17 @@
 <?php
 
 use App\Http\Controllers\DoctorDashboardController;
+use App\Http\Controllers\DoctorAppointmentsController;
+use App\Http\Controllers\PatientAppointmentFormController;
+use App\Http\Controllers\PatientAppointmentsController;
+use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\DoctorProfileController;
 use App\Http\Controllers\PatientProfileController;
 use App\Http\Controllers\DoctorScheduleController;
-use App\Http\Controllers\DoctorAppointmentsController;
 
 // Strona powitalna
 Route::get('/', function () {
@@ -85,15 +87,31 @@ Route::prefix('doctor/appointments')->group(function () {
     Route::get('/free', [DoctorAppointmentsController::class, 'showFreeAppointments'])->name('doctor.freeappointments');
     Route::get('/next', [DoctorAppointmentsController::class, 'showNextAppointments'])->name('doctor.nextappointments');
     Route::get('/historic', [DoctorAppointmentsController::class, 'showHistoricAppointments'])->name('doctor.historicappointments');
+    Route::get('/doctor/appointments/free', [DoctorAppointmentsController::class, 'showFreeAppointments'])->name('doctor.freeappointments');
+    Route::get('/doctor/appointments/next', [DoctorAppointmentsController::class, 'showNextAppointments'])->name('doctor.nextappointments');
+    Route::get('/doctor/appointments/historic', [DoctorAppointmentsController::class, 'showHistoricAppointments'])->name('doctor.historicappointments');
+
+});
+
+    Route::prefix('patient/appointments')->group(function () {
+
+        Route::get('/api/specializations', [PatientAppointmentFormController::class, 'getSpecializations']);
+        Route::get('/api/doctors/{specialization}', [PatientAppointmentFormController::class, 'getDoctors']);
+        Route::get('/api/dates/{doctorId}', [PatientAppointmentFormController::class, 'getDates']);
+        Route::get('/api/hours/{doctorId}/{date}', [PatientAppointmentFormController::class, 'getHours']);
+        
+        Route::get('/make', [PatientAppointmentFormController::class, 'makeAppointment'])->name('patient.appointments.make');
+        Route::post('/make', [PatientAppointmentFormController::class, 'postAppointment'])->name('patient.appointments.post');
+
+        Route::get('/next', [PatientAppointmentsController::class, 'showNextAppointments'])->name('patient.appointments.next');
+        Route::put('/next/{id}', [PatientAppointmentsController::class, 'cancelAppointment'])->name('patient.appointments.cancel');
+
+    });
 
     Route::get('/{id}/edit', [DoctorAppointmentsController::class, 'edit'])->name('appointments.edit');
     Route::put('/{id}', [DoctorAppointmentsController::class, 'update'])->name('appointments.update');
     Route::delete('/{id}', [DoctorAppointmentsController::class, 'destroy'])->name('appointments.destroy');
 });
-
-});
-
-
 
 // Autoryzacja
 require __DIR__.'/auth.php';

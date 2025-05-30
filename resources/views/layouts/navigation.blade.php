@@ -16,9 +16,33 @@
                     @php $role = Auth::user()->role; @endphp
 
                     @if ($role === 'patient')
-                        <x-nav-link href="#">Wizyty</x-nav-link>
-                        <x-nav-link href="#">Recepty</x-nav-link>
-                        <x-nav-link href="#">Skierowania</x-nav-link>
+
+
+
+                        <x-dropdown align="left" width="48">
+                            <x-slot name="trigger">
+                                <x-nav-link href="#">Wizyty</x-nav-link>
+                            </x-slot>
+
+                            <x-slot name="content">
+
+                                <x-dropdown-link href="{{ route('patient.appointments.make') }}">
+                                    Umów wizytę
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('patient.appointments.next') }}">
+                                    Przyszłe wizyty
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="#">
+                                    Historia wizyt
+                                </x-dropdown-link>
+
+                            </x-slot>
+                        </x-dropdown>
+
+
+
                     @elseif ($role === 'doctor')
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
