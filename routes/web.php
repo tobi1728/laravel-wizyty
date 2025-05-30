@@ -40,6 +40,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/patient/profile', [App\Http\Controllers\PatientProfileController::class, 'update']);
 
     Route::get('/doctor/visits', [App\Http\Controllers\DoctorProfileController::class, 'show'])->name('doctor.visits');
+
+    Route::get('/doctor/addschedule', [App\Http\Controllers\DoctorScheduleController::class, 'addSchedule'])->name('doctor.addschedule');
+    Route::post('/doctor/addschedule', [App\Http\Controllers\DoctorScheduleController::class, 'postSchedule']);
+    
+    Route::get('/doctor/schedules', [App\Http\Controllers\DoctorScheduleController::class, 'showAll'])->name('doctor.schedules');
+
+    Route::get('/doctor/appointments/free', [App\Http\Controllers\DoctorAppointmentsController::class, 'showFreeAppointments'])->name('doctor.freeappointments');
+    Route::get('/doctor/appointments/next', [App\Http\Controllers\DoctorAppointmentsController::class, 'showNextAppointments'])->name('doctor.nextappointments');
+    Route::get('/doctor/appointments/historic', [App\Http\Controllers\DoctorAppointmentsController::class, 'showHistoricAppointments'])->name('doctor.historicappointments');
 });
 
 // // Panel profilu

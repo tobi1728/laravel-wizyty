@@ -22,8 +22,51 @@
                         <x-nav-link href="#">Recepty</x-nav-link>
                         <x-nav-link href="#">Skierowania</x-nav-link>
                     @elseif ($role === 'doctor')
-                        <x-nav-link href="#">Moje godziny</x-nav-link>
+                        <x-nav-link href="#">Ustaw grafik</x-nav-link>
                         <x-nav-link href="visits">Wizyty pacjentów</x-nav-link>
+
+                        <x-dropdown align="left" width="48">
+                            <x-slot name="trigger">
+                                <x-nav-link href="#">Grafik</x-nav-link>
+                            </x-slot>
+
+                            <x-slot name="content">
+
+                                <x-dropdown-link href="{{ route('doctor.addschedule') }}">
+                                    Ustaw grafik
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('doctor.schedules') }}">
+                                    Zobacz grafik
+                                </x-dropdown-link>
+
+                            </x-slot>
+                        </x-dropdown>
+
+                        <x-dropdown align="left" width="48">
+                            <x-slot name="trigger">
+                                <x-nav-link href="#">Wizyty</x-nav-link>
+                            </x-slot>
+
+                            <x-slot name="content">
+
+                                <x-dropdown-link href="{{ route('doctor.nextappointments') }}">
+                                    Nadchodzące wizyty
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('doctor.historicappointments') }}">
+                                    Historia wizyt
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('doctor.freeappointments') }}">
+                                    Wolne wizyty
+                                </x-dropdown-link>
+
+                            </x-slot>
+                        </x-dropdown>
+
+
+
                     @elseif ($role === 'admin')
                         <x-nav-link href="#">Użytkownicy</x-nav-link>
                         <x-nav-link href="#">Zarządzanie systemem</x-nav-link>

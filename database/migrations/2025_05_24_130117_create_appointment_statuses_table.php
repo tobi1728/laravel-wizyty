@@ -18,10 +18,10 @@ return new class extends Migration
         });
 
         DB::table('appointment_statuses')->insert([
-            ['id'=>1, 'appointmentStatusName'=>'zaplanowana'],
-            ['id'=>2, 'appointmentStatusName'=>'anulowana'],
-            ['id'=>3, 'appointmentStatusName'=>'w trakcie'],
-            ['id'=>4, 'appointmentStatusName'=>'zakończona'],
+            ['id'=>1, 'appointmentStatusName'=>'wolna'],
+            ['id'=>2, 'appointmentStatusName'=>'zaplanowana'],
+            ['id'=>3, 'appointmentStatusName'=>'anulowana'],
+            ['id'=>4, 'appointmentStatusName'=>'zrealizowana'],
             ['id'=>5, 'appointmentStatusName'=>'nieobecność'],
         ]);
     }
