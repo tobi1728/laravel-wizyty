@@ -35,7 +35,9 @@
                                         {{ $appointment->patient?->user?->firstName ?? '—' }}
                                         {{ $appointment->patient?->user?->lastName ?? '' }}
                                     </td>
-                                    <td class="px-4 py-2">{{ $appointment->status->appointmentStatusName ?? 'Brak' }}</td>
+                                    <td class="px-4 py-2">
+                                        <x-appointment-status :status="$appointment->status->appointmentStatusName" />
+                                    </td>
                                     <td class="px-4 py-2">{{ $appointment->notes ?? '—' }}</td>
                                     <td class="px-4 py-2 text-center flex justify-center gap-4">
                                         <a href="{{ route('appointments.edit', ['id' => $appointment->id, 'back' => url()->current()]) }}" class="text-yellow-500 hover:text-yellow-600" title="Edytuj">
