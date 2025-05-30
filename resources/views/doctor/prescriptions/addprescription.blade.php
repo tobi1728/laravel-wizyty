@@ -15,7 +15,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('prescriptions.store') }}">
+            <form method="POST" action="{{ route('prescriptions.store') }}">
                     @csrf
 
                     <!-- Appointment -->
@@ -24,9 +24,12 @@
                         <select id="appointment_id" name="appointment_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                             <option value="">-- Wybierz --</option>
                             @foreach ($appointments as $appointment)
-                                <option value="{{ $appointment->id }}">
-                                    {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d H:i') }}
-                                </option>
+                                @php
+                                    $user = $appointment->patient ?? null;
+                                    $name = $user ? $user->firstName . ' ' . $user->lastName : 'Brak pacjenta';
+                                    $date = \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d H:i');
+                                @endphp
+                                <option value="{{ $appointment->id }}">{{ $name }} — {{ $date }}</option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('appointment_id')" class="mt-2" />
