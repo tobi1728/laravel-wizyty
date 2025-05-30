@@ -15,7 +15,7 @@ class DoctorAppointmentsController extends Controller
 
         $freeAppointments = Appointment::where('doctor_id', $doctor->id)
             ->where('appointment_status_id', 1)
-            ->with('patient.user')
+            ->with('patient')
             ->with('status')
             ->orderBy('appointment_date')
             ->get();
@@ -29,7 +29,7 @@ class DoctorAppointmentsController extends Controller
 
         $nextAppointments = Appointment::where('doctor_id', $doctor->id)
             ->where('appointment_status_id', 2)
-            ->with('patient.user')
+            ->with('patient')
             ->with('status')
             ->orderBy('appointment_date')
             ->get();
@@ -43,7 +43,7 @@ class DoctorAppointmentsController extends Controller
 
         $historicAppointments = Appointment::where('doctor_id', $doctor->id)
             ->whereNotIn('appointment_status_id', [1, 2])
-            ->with('patient.user')
+            ->with('patient')
             ->with('status')
             ->orderBy('appointment_date')
             ->get();

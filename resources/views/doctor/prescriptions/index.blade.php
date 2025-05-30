@@ -53,7 +53,7 @@
                                     </form>
 
                                     {{-- PDF --}}
-                                    <a href="{{ route('prescriptions.export', $prescription->id) }}" class="text-green-600 hover:text-green-700" title="Eksportuj PDF">
+                                    <a href="{{ route('prescriptions.export', $prescription->id) }}" target="_blank" class="text-green-600 hover:text-green-700" title="Eksportuj PDF">
                                         <i class="fa-solid fa-file"></i>
                                     </a>
 
