@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +46,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/doctor/addschedule', [App\Http\Controllers\DoctorScheduleController::class, 'postSchedule']);
     
     Route::get('/doctor/schedules', [App\Http\Controllers\DoctorScheduleController::class, 'showAll'])->name('doctor.schedules');
+
+Route::prefix('doctor/prescriptions')->group(function () {
+    Route::get('/', [PrescriptionController::class, 'index'])->name('prescriptions.index');
+    Route::get('/addprescription', [PrescriptionController::class, 'addPrescription'])->name('prescriptions.addPrescription');
+    Route::post('/store', [PrescriptionController::class, 'store'])->name('prescriptions.store');
+    Route::get('/{id}', [PrescriptionController::class, 'show'])->name('prescriptions.show');
+    Route::get('/{id}/edit', [PrescriptionController::class, 'edit'])->name('prescriptions.edit');
+    Route::put('/{id}', [PrescriptionController::class, 'update'])->name('prescriptions.update');
+    Route::delete('/{id}', [PrescriptionController::class, 'destroy'])->name('prescriptions.destroy');
+Route::get('/{id}/export', [PrescriptionController::class, 'exportPdf'])->name('prescriptions.export');
+});
 
     Route::get('/doctor/appointments/free', [App\Http\Controllers\DoctorAppointmentsController::class, 'showFreeAppointments'])->name('doctor.freeappointments');
     Route::get('/doctor/appointments/next', [App\Http\Controllers\DoctorAppointmentsController::class, 'showNextAppointments'])->name('doctor.nextappointments');

@@ -10,11 +10,12 @@ use Carbon\Carbon;
 
 class DoctorScheduleController extends Controller
 {
+    // Wyświetlenie wszystkich grafików lekarza
     public function showAll()
     {
-        $doctor = Auth::user()->doctor;
+        $doctor = Auth::user()->doctor; // Pobranie lekarza powiązanego z aktualnie zalogowanym użytkownikiem
 
-        $schedules = \App\Models\DoctorSchedule::where('doctor_id', $doctor->id)
+        $schedules = DoctorSchedule::where('doctor_id', $doctor->id)
             ->orderBy('dateStart')
             ->orderBy('timeStart')
             ->get();
@@ -22,16 +23,13 @@ class DoctorScheduleController extends Controller
         return view('doctor.schedules', compact('schedules'));
     }
 
-
-    // Załadowanie formularza na stronie dodawnaia grafiku lekarza
+    // Załadowanie formularza na stronie dodawania grafiku lekarza
     public function addSchedule()
     {
-        $doctor = Auth::user()->doctor;
-
         return view('doctor.addschedule');
     }
 
-    // Wykonanie POST na formularzu na stronie dodawnaia grafiku lekarza
+    // Wykonanie POST na formularzu na stronie dodawania grafiku lekarza
     public function postSchedule(Request $request)
     {
         // to są nazwy pól formularza
@@ -41,10 +39,16 @@ class DoctorScheduleController extends Controller
             'time-to' => 'required|date_format:H:i',
         ]);
 
+        // Pobierz lekarza przypisanego do użytkownika
         $doctor = Auth::user()->doctor;
-        $doctorId = Auth::id();
-        
-        // przypisanie do zmiennych wartości przesłancyh z formularza
+
+        if (!$doctor) {
+            abort(403, 'Użytkownik nie jest lekarzem.');
+        }
+
+        $doctorId = $doctor->id; // Używamy ID lekarza z tabeli doctors
+
+        // przypisanie do zmiennych wartości przesłanych z formularza
         $date = $request->input('date');
         $timeStart = $request->input('time-from');
         $timeEnd = $request->input('time-to');
@@ -58,7 +62,7 @@ class DoctorScheduleController extends Controller
             'timeEnd' => $timeEnd,
         ]);
 
-        // zmienne potrzbene do manipulowania godzinami z biblioteką Carbon
+        // zmienne potrzebne do manipulowania godzinami z biblioteką Carbon
         $start = Carbon::createFromFormat('Y-m-d H:i', "$date $timeStart");
         $end = Carbon::createFromFormat('Y-m-d H:i', "$date $timeEnd");
 
@@ -71,13 +75,9 @@ class DoctorScheduleController extends Controller
                 'appointment_status_id' => 1,
             ]);
 
-            $start -> addMinutes(30);
+            $start->addMinutes(30);
         }
 
         return back()->with('success', 'Grafik i wizyty zostały dodane.');
     }
-
-
-
-
 }

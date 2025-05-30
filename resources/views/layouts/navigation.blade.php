@@ -6,13 +6,13 @@
             <div class="flex items-center gap-6">
                 <!-- Logo from file -->
                 <a href="{{ route('dashboard') }}">
-                    <img src="{{ asset('images/logo.svg') }}" alt="Logo" class="h-9 w-auto">
+                    <img src="{{ asset('images/yourcure-logo.svg') }}" alt="Logo" class="h-9 w-auto">
                 </a>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Strona główna') }}
                     </x-nav-link>
 
                     @php $role = Auth::user()->role; @endphp
@@ -22,8 +22,7 @@
                         <x-nav-link href="#">Recepty</x-nav-link>
                         <x-nav-link href="#">Skierowania</x-nav-link>
                     @elseif ($role === 'doctor')
-                        <x-nav-link href="#">Ustaw grafik</x-nav-link>
-                        <x-nav-link href="visits">Wizyty pacjentów</x-nav-link>
+                        
 
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
@@ -42,7 +41,19 @@
 
                             </x-slot>
                         </x-dropdown>
+                        <x-dropdown align="left" width="48">
+                            <x-slot name="trigger">
+                                <x-nav-link href="#">Recepty</x-nav-link>
+                            </x-slot>
 
+                            <x-slot name="content">
+                                <x-dropdown-link href="{{ route('prescriptions.addPrescription') }}">
+                                    Wystaw receptę
+                                </x-dropdown-link>
+<x-dropdown-link href="{{ route('prescriptions.index') }}">
+    Wystawione recepty
+</x-dropdown-link>                            </x-slot>
+                        </x-dropdown>
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <x-nav-link href="#">Wizyty</x-nav-link>
