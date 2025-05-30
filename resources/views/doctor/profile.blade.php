@@ -17,12 +17,45 @@
                 <form method="POST" action="{{ url('/doctor/profile') }}" class="mt-6 space-y-6">
                     @csrf
 
-                    <div>
-                        <x-input-label for="specialization" :value="__('Specjalizacja')" />
-                        <x-text-input id="specialization" name="specialization" type="text" class="mt-1 block w-full"
-                                      :value="old('specialization', $doctor->specialization)" autofocus />
-                        <x-input-error class="mt-2" :messages="$errors->get('specialization')" />
-                    </div>
+<div>
+    <x-input-label for="specialization_select" :value="__('Specjalizacja')" />
+    
+    <select id="specialization_select" name="specialization_select"
+            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+            onchange="toggleCustomSpecialization(this.value)">
+            @php
+                $availableSpecializations = [
+                    'Internista',
+                    'Pediatra',
+                    'Kardiolog',
+                    'Ortopeda',
+                    'Dermatolog',
+                    'Neurolog',
+                    'Endokrynolog',
+                    'Ginekolog',
+                    'Psychiatra',
+                    'Pulmonolog'
+                ];
+                $currentSpecialization = old('specialization', $doctor->specialization);
+            @endphp
+
+        @foreach($availableSpecializations as $spec)
+            <option value="{{ $spec }}" {{ $currentSpecialization === $spec ? 'selected' : '' }}>{{ $spec }}</option>
+        @endforeach
+        <option value="other" {{ !in_array($currentSpecialization, $availableSpecializations) ? 'selected' : '' }}>
+            Inna (wpisz własną)
+        </option>
+    </select>
+
+    <x-input-error class="mt-2" :messages="$errors->get('specialization')" />
+</div>
+
+<div id="custom_specialization_wrapper" class="mt-4" style="display: none;">
+    <x-input-label for="specialization" :value="__('Własna specjalizacja')" />
+    <x-text-input id="specialization" name="specialization" type="text" class="mt-1 block w-full"
+                  :value="in_array($currentSpecialization, $availableSpecializations) ? '' : $currentSpecialization" />
+</div>
+
 
                     <div>
                         <x-input-label for="license_number" :value="__('Numer licencji')" />
@@ -41,4 +74,24 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selected = document.getElementById('specialization_select').value;
+            toggleCustomSpecialization(selected);
+        });
+
+        function toggleCustomSpecialization(value) {
+            const wrapper = document.getElementById('custom_specialization_wrapper');
+            if (value === 'other') {
+                wrapper.style.display = 'block';
+            } else {
+                wrapper.style.display = 'none';
+                document.getElementById('specialization').value = value;
+            }
+        }
+    </script>
+    @endpush
 </x-app-layout>
+
