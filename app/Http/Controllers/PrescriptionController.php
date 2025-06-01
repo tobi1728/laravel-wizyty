@@ -96,22 +96,40 @@ class PrescriptionController extends Controller
         return redirect()->route('prescriptions.index')->with('success', 'Recepta została zaktualizowana.');
     }
 
-        public function destroy($id)
-        {
-            $prescription = Prescription::findOrFail($id);
-            $prescription->delete();
+    public function destroy($id)
+    {
+        $prescription = Prescription::findOrFail($id);
+        $prescription->delete();
 
-            return redirect()->route('prescriptions.index')->with('success', 'Recepta została usunięta.');
+        return redirect()->route('prescriptions.index')->with('success', 'Recepta została usunięta.');
+    }
+
+    // public function exportPdf($id)
+    // {
+    //     $prescription = Prescription::with(['medicine', 'appointment.doctor.user', 'appointment.patient.user'])
+    //         ->findOrFail($id);
+
+    //     return \Barryvdh\DomPDF\Facade\Pdf::loadView('doctor.prescriptions.pdf', compact('prescription'))
+    //         ->stream('recepta_'.$prescription->prescription_code.'.pdf');
+    // }
+
+    public function exportPdf($id)
+    {
+        $user = Auth::user();
+
+        $prescription = Prescription::with(['medicine', 'appointment.doctor.user', 'appointment.patient.user'])
+            ->findOrFail($id);
+
+        if ($user->role === 'patient') {
+            $patient = $user->patient;
+
+            if (!$patient || $prescription->appointment->patient_id !== $patient->id) {
+                abort(403, 'Nie masz dostępu do tej recepty.');
+            }
         }
 
-        public function exportPdf($id)
-        {
-            $prescription = Prescription::with(['medicine', 'appointment.doctor.user', 'appointment.patient.user'])
-                ->findOrFail($id);
+        $pdf = Pdf::loadView('doctor.prescriptions.pdf', compact('prescription'));
 
-            return \Barryvdh\DomPDF\Facade\Pdf::loadView('doctor.prescriptions.pdf', compact('prescription'))
-                ->stream('recepta_'.$prescription->prescription_code.'.pdf');
-        }
-
-
+        return $pdf->stream('recepta_'.$prescription->prescription_code.'.pdf');
+    }
 }

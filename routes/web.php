@@ -12,6 +12,8 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\DoctorProfileController;
 use App\Http\Controllers\PatientProfileController;
 use App\Http\Controllers\DoctorScheduleController;
+use App\Http\Controllers\PatientDashboardController;
+use App\Http\Controllers\PatientDocumentationController;
 
 // Strona powitalna
 Route::get('/', function () {
@@ -32,8 +34,8 @@ Route::middleware('auth')->get('/dashboard', function () {
 // Panele główne dla ról
 Route::middleware('auth')->group(function () {
     Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
-Route::get('/doctor/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
-    Route::view('/patient/dashboard', 'patient.dashboard')->name('patient.dashboard');
+    Route::get('/doctor/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
+    Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
 });
 
 // Profile i funkcje wspólne
@@ -105,6 +107,16 @@ Route::prefix('doctor/appointments')->group(function () {
 
         Route::get('/next', [PatientAppointmentsController::class, 'showNextAppointments'])->name('patient.appointments.next');
         Route::put('/next/{id}', [PatientAppointmentsController::class, 'cancelAppointment'])->name('patient.appointments.cancel');
+
+        Route::get('/historic', [PatientAppointmentsController::class, 'showHistoricAppointments'])->name('patient.appointments.historic');
+        Route::get('/historic/{id}/referral', [ReferralController::class, 'pdf'])->name('referrals.pdf');
+        Route::get('/historic/{id}/prescription', [PrescriptionController::class, 'exportPdf'])->name('prescriptions.export');
+
+        Route::get('/myprescriptions', [PatientDocumentationController::class, 'showMyPrescriptions'])->name('patient.documentation.prescriptions');
+        Route::get('/myprescriptions/{id}/prescription', [PrescriptionController::class, 'exportPdf'])->name('prescriptions.export');
+
+        Route::get('/myreferrals', [PatientDocumentationController::class, 'showMyReferrals'])->name('patient.documentation.referrals');
+        Route::get('/myreferrals/{id}/referral', [ReferralController::class, 'pdf'])->name('referrals.pdf');
 
     });
 

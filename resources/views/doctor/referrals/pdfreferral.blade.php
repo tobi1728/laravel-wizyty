@@ -44,8 +44,8 @@
         <div class="section">
             <div class="line">
                 <span class="label">Pacjent:</span>
-                {{ $referral->appointment->patient?->firstName ?? 'Brak' }}
-                {{ $referral->appointment->patient?->lastName ?? '' }}
+                {{ $referral->appointment->patient?->user->firstName ?? 'Brak' }}
+                {{ $referral->appointment->patient?->user->lastName ?? '' }}
             </div>
 
             <div class="line">

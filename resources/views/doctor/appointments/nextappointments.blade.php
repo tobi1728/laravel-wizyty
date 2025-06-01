@@ -32,8 +32,8 @@
                                 <tr>
                                     <td class="px-4 py-2">{{ $appointment->appointment_date }}</td>
                                     <td class="px-4 py-2">
-                                        {{ $appointment->patient?->user?->firstName ?? '—' }}
-                                        {{ $appointment->patient?->user?->lastName ?? '' }}
+                                        {{ $appointment->patient?->user->firstName ?? '—' }}
+                                        {{ $appointment->patient?->user->lastName ?? '' }}
                                     </td>
                                     <td class="px-4 py-2">
                                         <x-appointment-status :status="$appointment->status->appointmentStatusName" />

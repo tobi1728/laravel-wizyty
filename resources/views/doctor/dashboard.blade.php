@@ -16,7 +16,7 @@
                     @foreach ($todayAppointments as $appt)
                         <div class="border-b py-2">
                             <p><strong>Godzina:</strong> {{ \Carbon\Carbon::parse($appt->appointment_date)->format('H:i') }}</p>
-                            <p><strong>Pacjent:</strong> {{ $appt->patient?->user?->firstName }} {{ $appt->patient?->user?->lastName }}</p>
+                            <p><strong>Pacjent:</strong> {{ $appt->patient?->user->firstName }} {{ $appt->patient?->user->lastName }}</p>
                             <p><strong>Status:</strong>
                                 <x-appointment-status :status="$appt->status->appointmentStatusName" />
                             </p>
@@ -55,7 +55,9 @@
                     @foreach ($historicAppointments as $appt)
                         <div class="border-b py-2">
                             <p><strong>Data:</strong> {{ $appt->appointment_date }}</p>
-                            <p><strong>Pacjent:</strong> {{ $appt->patient?->user?->firstName }} {{ $appt->patient?->user?->lastName }}</p>
+                            <p><strong>Pacjent:</strong>
+                                {{ $appt->patient?->user->firstName }} {{ $appt->patient?->user->lastName }}
+                            </p>
                             <p><strong>Status:</strong>
                                 <x-appointment-status :status="$appt->status->appointmentStatusName" />
                             </p>

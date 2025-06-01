@@ -25,8 +25,8 @@
                             <option value="">-- Wybierz --</option>
                             @foreach ($appointments as $appointment)
                                 <option value="{{ $appointment->id }}">
-                                    {{ $appointment->patient?->firstName ?? 'Brak pacjenta' }}
-                                    {{ $appointment->patient?->lastName ?? '' }}
+                                    {{ $appointment->patient?->user->firstName ?? 'Brak pacjenta' }}
+                                    {{ $appointment->patient?->user->lastName ?? '' }}
                                     —
                                     {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d H:i') }}
                                 </option>
