@@ -17,8 +17,6 @@
 
                     @if ($role === 'patient')
 
-
-
                         <x-dropdown align="left" width="48">
                             <x-slot name="trigger">
                                 <x-nav-link href="#">Wizyty</x-nav-link>
@@ -34,14 +32,20 @@
                                     Przyszłe wizyty
                                 </x-dropdown-link>
 
-                                <x-dropdown-link href="#">
+                                <x-dropdown-link href="{{ route('patient.appointments.historic') }}">
                                     Historia wizyt
                                 </x-dropdown-link>
 
                             </x-slot>
                         </x-dropdown>
 
+                        <x-nav-link href="{{ route('patient.documentation.prescriptions') }}">
+                            Recepty
+                        </x-nav-link>
 
+                        <x-nav-link href="{{ route('patient.documentation.referrals') }}">
+                            Skierowania
+                        </x-nav-link>
 
                     @elseif ($role === 'doctor')
                         <x-dropdown align="left" width="48">

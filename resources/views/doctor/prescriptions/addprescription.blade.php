@@ -25,7 +25,7 @@
                             <option value="">-- Wybierz --</option>
                             @foreach ($appointments as $appointment)
                                 @php
-                                    $user = $appointment->patient ?? null;
+                                    $user = $appointment->patient->user ?? null;
                                     $name = $user ? $user->firstName . ' ' . $user->lastName : 'Brak pacjenta';
                                     $date = \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d H:i');
                                 @endphp

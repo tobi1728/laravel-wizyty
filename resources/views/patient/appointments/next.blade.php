@@ -8,11 +8,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <header>
-                    <h2 class="text-lg font-medium text-gray-900">
-                        {{ __('Zobacz swoje przyszłe wizyty') }}
-                    </h2>
-                </header>
 
                 <table class="w-full text-sm text-left border border-gray-200 rounded-md overflow-hidden">
                     <thead class="bg-gray-100 text-gray-700 font-semibold">

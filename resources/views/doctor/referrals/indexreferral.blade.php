@@ -27,8 +27,8 @@
                                 <tr>
                                     <td class="px-4 py-2">{{ \Carbon\Carbon::parse($referral->issue_date)->format('Y-m-d') }}</td>
                                     <td>
-                                        {{ $referral->appointment->patient?->firstName ?? 'Brak pacjenta' }}
-                                        {{ $referral->appointment->patient?->lastName ?? '' }}
+                                        {{ $referral->appointment->patient?->user->firstName ?? 'Brak pacjenta' }}
+                                        {{ $referral->appointment->patient?->user->lastName ?? '' }}
                                     </td>
                                     <td class="px-4 py-2">{{ $referral->target_specialization }}</td>
                                     <td class="px-4 py-2">{{ $referral->refferal_code }}</td>
@@ -44,7 +44,7 @@
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
-                                        <a href="{{ route('referrals.pdf', $referral->id) }}" class="text-green-600 hover:text-green-700" title="PDF">
+                                        <a href="{{ route('referrals.pdf', $referral->id) }}" target="_blank" class="text-green-600 hover:text-green-700" title="PDF">
                                             <i class="fa-solid fa-file"></i>
                                         </a>
                                     </td>

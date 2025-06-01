@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\AppointmentStatus;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Appointment extends Model
 {
@@ -25,7 +26,7 @@ class Appointment extends Model
      */
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Patient::class);
     }
 
     /**
@@ -42,5 +43,15 @@ class Appointment extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(AppointmentStatus::class, 'appointment_status_id');
+    }
+
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(Referral::class, 'appointment_id');
+    }
+
+        public function prescriptions(): HasMany
+    {
+        return $this->hasMany(Prescription::class, 'appointment_id');
     }
 }

@@ -96,7 +96,17 @@ class ReferralController extends Controller
 
     public function pdf($id)
     {
+        $user = Auth::user();
+
         $referral = Referral::with('appointment.patient')->findOrFail($id);
+
+        if ($user->role === 'patient') {
+            $patient = $user->patient;
+
+            if (!$patient || $referral->appointment->patient_id !== $patient->id) {
+                abort(403, 'Nie masz dostępu do tego skierowania.');
+            }
+        }
 
         $pdf = Pdf::loadView('doctor.referrals.pdfreferral', compact('referral'));
 

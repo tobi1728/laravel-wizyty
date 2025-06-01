@@ -54,16 +54,18 @@ class PatientAppointmentsController extends Controller
 
     public function showHistoricAppointments()
     {
-        $doctor = Auth::user()->doctor;
+        $patient = Auth::user()->patient;
 
-        $historicAppointments = \App\Models\Appointment::where('doctor_id', $doctor->id)
+        $historicAppointments = \App\Models\Appointment::where('patient_id', $patient->id)
             ->whereNotIn('appointment_status_id', [1, 2])
-            ->with('patient')
+            ->with('doctor')
             ->with('status')
+            ->with('referrals')
+            ->with('prescriptions')
             ->orderBy('appointment_date')
             ->get();
 
-        return view('doctor.historicappointments', compact('historicAppointments'));
+        return view('patient.appointments.historic', compact('historicAppointments'));
     }
 
 
