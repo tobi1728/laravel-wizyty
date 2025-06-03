@@ -78,7 +78,13 @@ class DoctorAppointmentsController extends Controller
             return redirect()->to($backUrl)->with('success', 'Wizyta została zaktualizowana.');
         }
 
-        return redirect()->route('doctor.nextappointments')->with('success', 'Wizyta została zaktualizowana.');
+        if (Auth::user()->role === 'doctor') {
+            return redirect()->route('doctor.nextappointments')->with('success', 'Wizyta została zaktualizowana.');
+        } elseif (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.data.appointments')->with('success', 'Wizyta została zaktualizowana.');
+        } else {
+            abort(403, 'Brak uprawnień do wykonania tej operacji.');
+        }
     }
 
 
