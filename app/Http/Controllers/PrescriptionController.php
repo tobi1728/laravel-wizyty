@@ -93,7 +93,13 @@ class PrescriptionController extends Controller
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('prescriptions.index')->with('success', 'Recepta została zaktualizowana.');
+        if (Auth::user()->role === 'doctor') {
+            return redirect()->route('prescriptions.index')->with('success', 'Recepta została zaktualizowana.');
+        } elseif (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.data.prescriptions')->with('success', 'Recepta została zaktualizowana.');
+        } else {
+            abort(403, 'Brak uprawnień do wykonania tej operacji.');
+        }
     }
 
     public function destroy($id)

@@ -83,7 +83,13 @@ class ReferralController extends Controller
             'reason' => $request->reason,
         ]);
 
-        return redirect()->route('referrals.index')->with('success', 'Skierowanie zostało zaktualizowane.');
+        if (Auth::user()->role === 'doctor') {
+            return redirect()->route('referrals.index')->with('success', 'Skierowanie zostało zaktualizowane.');
+        } elseif (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.data.referrals')->with('success', 'Skierowanie zostało zaktualizowane.');
+        } else {
+            abort(403, 'Brak uprawnień do wykonania tej operacji.');
+        }
     }
 
     public function destroy($id)

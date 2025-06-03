@@ -9,36 +9,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
-class ProfileController extends Controller
+class AdminProfileController extends Controller
 {
-    /**
-     * Wyświetlenie domyślnego profilu (jeśli jeszcze używany).
-     */
-    public function edit(Request $request): View
+    public function edit()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $admin = Auth::user()->admin;
+
+        return view('admin.profile', compact('admin'));
     }
 
-    /**
-     * Domyślna aktualizacja profilu (jeśli jeszcze używana).
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
 
     /**
-     * 🆕 Aktualizacja profilu administratora.
+     *  Aktualizacja profilu administratora.
      */
     public function updateAdmin(Request $request): RedirectResponse
     {

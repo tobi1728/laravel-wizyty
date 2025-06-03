@@ -89,8 +89,38 @@
                             </x-slot>
                         </x-dropdown>
                     @elseif ($role === 'admin')
-                        <x-nav-link href="#">Użytkownicy</x-nav-link>
-                        <x-nav-link href="#">Zarządzanie systemem</x-nav-link>
+                        <x-nav-link href="{{ route('admin.users.index') }}">Użytkownicy</x-nav-link>
+
+                        <x-dropdown align="left" width="48">
+                            <x-slot name="trigger">
+                                <x-nav-link href="#">Zarządzanie systemem</x-nav-link>
+                            </x-slot>
+
+                            <x-slot name="content">
+
+                                <x-dropdown-link href="{{ route('admin.data.schedules') }}">
+                                    Grafik lekarzy
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('admin.data.appointments') }}">
+                                    Wizyty
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('admin.data.medicines') }}">
+                                    Baza leków
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('admin.data.prescriptions') }}">
+                                    Recepty
+                                </x-dropdown-link>
+
+                                <x-dropdown-link href="{{ route('admin.data.referrals') }}">
+                                    Skierowania
+                                </x-dropdown-link>
+
+                            </x-slot>
+                        </x-dropdown>
+
                     @endif
                 </div>
             </div>
