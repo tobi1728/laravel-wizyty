@@ -5,29 +5,54 @@ namespace App\Http\Controllers;
 use App\Models\Prescription;
 use App\Models\Referral;
 use App\Models\Appointment;
+use App\Models\Patient;
+use App\Models\Doctor;
+use App\Models\Medicine;
 use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
     public function index()
     {
-        $admin = Auth::user()->admin;
 
-        // $nextAppointment = \App\Models\Appointment::where('patient_id', $patient->id)
-        //     ->where('appointment_status_id', 2)
-        //     ->with('doctor')
-        //     ->with('status')
-        //     ->orderBy('appointment_date')
-        //     ->first();
+        $allPatientsCount = \App\Models\Patient::count();
 
-        // $lastAppointment = \App\Models\Appointment::where('patient_id', $patient->id)
-        //     ->whereNotIn('appointment_status_id', [1, 2])
-        //     ->with('doctor')
-        //     ->with('status')
-        //     ->orderBy('appointment_date', 'desc')
-        //     ->first();
+        $lastPatient = \App\Models\Patient::orderBy('id', 'desc')
+            ->first();
 
-        return view('admin.dashboard');
+        $allMedicinesCount = \App\Models\Medicine::count();
+
+        $lastMedicine = \App\Models\Medicine::orderBy('id', 'desc')
+            ->first();
+
+        $allDoctorsCount = \App\Models\Doctor::count();
+
+        $lastDoctor = \App\Models\Doctor::orderBy('id', 'desc')
+            ->first();
+
+        $allAppointmentsCount = \App\Models\Appointment::count();
+
+        $lastAppointment = \App\Models\Appointment::orderBy('id', 'desc')
+            ->with('status')
+            ->first();
+
+        if ($lastAppointment) {
+            $appointmentDate = \Carbon\Carbon::parse($lastAppointment->appointment_date)->format('Y-m-d');
+
+            $appointmentTime = \Carbon\Carbon::parse($lastAppointment->appointment_date)->format('H:i');
+        }
+
+        return view('admin.dashboard', compact(
+            'allPatientsCount',
+            'lastPatient',
+            'allMedicinesCount',
+            'lastMedicine',
+            'allDoctorsCount',
+            'lastDoctor',
+            'allAppointmentsCount',
+            'lastAppointment',
+            'appointmentDate',
+            'appointmentTime'));
     }
 
 }
