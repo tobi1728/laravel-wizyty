@@ -1,5 +1,8 @@
 <?php
 
+// use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminDataAppointmentsController;
 use App\Http\Controllers\AdminDataMedicinesController;
@@ -13,8 +16,6 @@ use App\Http\Controllers\DoctorAppointmentsController;
 use App\Http\Controllers\PatientAppointmentFormController;
 use App\Http\Controllers\PatientAppointmentsController;
 use App\Http\Controllers\PrescriptionController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\DoctorProfileController;
 use App\Http\Controllers\PatientProfileController;
@@ -38,18 +39,11 @@ Route::middleware('auth')->get('/dashboard', function () {
     };
 })->name('dashboard');
 
-// Panele główne dla ról
-// Route::middleware('auth')->group(function () {
-//     // Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-//     // Route::get('/doctor/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
-//     // Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
-// });
-
 // Profile i funkcje wspólne
 Route::middleware('auth')->group(function () {
 
     // Routing dla roli Doctor -> /doctor/
-    Route::prefix('doctor')->group(function () {
+    Route::middleware('role:doctor')->prefix('doctor')->group(function () {
 
         // Doktor - dashboard
         Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('doctor.dashboard');
@@ -103,7 +97,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Routing dla roli Patient -> /patient/
-    Route::prefix('patient')->group(function () {
+    Route::middleware('role:patient')->prefix('patient')->group(function () {
 
         // Pacjent - dashboard
         Route::get('/dashboard', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
@@ -149,7 +143,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Routing dla roli Admin -> /admin/
-    Route::prefix('admin')->group(function () {
+    Route::middleware('role:admin')->prefix('admin')->group(function () {
 
         // Admin - dashboard
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
