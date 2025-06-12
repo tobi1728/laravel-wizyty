@@ -19,7 +19,13 @@ class DoctorProfileController extends Controller
     {
         $request->validate([
             'specialization' => 'nullable|string|max:255',
-            'license_number' => 'nullable|string|max:255',
+            'license_number' => [
+                'nullable',
+                'string',
+                'regex:/^[A-Z]{2}[0-9]{6}$/'
+            ],
+        ], [
+            'license_number.regex' => 'Numer licencji musi składać się z 2 dużych liter i 6 cyfr, np. AB123456.',
         ]);
 
         $doctor = Auth::user()->doctor;
