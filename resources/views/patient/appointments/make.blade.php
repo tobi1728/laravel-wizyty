@@ -8,58 +8,72 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <header>
-                    <h2 class="text-lg font-medium text-gray-900">
-                        {{ __('Umów się na wizytę') }}
-                    </h2>
-                </header>
+                <div class="flex flex-col md:flex-row gap-6">
 
-                <form method="POST" action="{{ route('patient.appointments.post') }}" class="mt-6 space-y-6">
-                    @csrf
+                    <!-- LEWA STRONA – FORMULARZ -->
+                    <div class="basis-1/2">
+                        <header>
+                            <h2 class="text-lg font-medium text-gray-900">
+                                {{ __('Umów się na wizytę') }}
+                            </h2>
+                        </header>
 
-                    <div>
-                        <x-input-label for="specialization" value="Wybierz specjalizację" />
-                        <select id="specialization" name="specialization" class="w-full p-2 rounded border-gray-300">
-                            <option value="">-- wybierz specke --</option>
-                        </select>
-                        <x-input-error class="mt-2" :messages="$errors->get('date')" />
+                        <form method="POST" action="{{ route('patient.appointments.post') }}" class="mt-6 space-y-6">
+                            @csrf
+
+                            <div>
+                                <x-input-label for="specialization" value="Wybierz specjalizację" />
+                                <select id="specialization" name="specialization" class="w-full p-2 rounded border-gray-300">
+                                    <option value="">-- wybierz specke --</option>
+                                </select>
+                                <x-input-error class="mt-2" :messages="$errors->get('specialization')" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="doctor_id" value="Wybierz lekarza" />
+                                <select id="doctor_id" name="doctor_id" class="w-full p-2 rounded border-gray-300">
+                                    <option value="">-- wybierz doktorka --</option>
+                                </select>
+                                <x-input-error class="mt-2" :messages="$errors->get('doctor_id')" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="appointment_day" value="Wybierz datę" />
+                                <select id="appointment_day" name="appointment_day" class="w-full p-2 rounded border-gray-300">
+                                    <option value="">-- wybierz dzien --</option>
+                                </select>
+                                <x-input-error class="mt-2" :messages="$errors->get('appointment_day')" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="appointment_id" value="Wybierz godzinę" />
+                                <select id="appointment_id" name="appointment_id" class="w-full p-2 rounded border-gray-300">
+                                    <option value="">-- wybierz godzine --</option>
+                                </select>
+                                <x-input-error class="mt-2" :messages="$errors->get('appointment_id')" />
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <x-primary-button>{{ __('Umów wizytę') }}</x-primary-button>
+                                @if(session('success'))
+                                    <p class="text-sm text-gray-600">{{ session('success') }}</p>
+                                @endif
+                            </div>
+                        </form>
                     </div>
 
-                    <div>
-                        <x-input-label for="doctor_id" value="Wybierz lekarza" />
-                        <select id="doctor_id" name="doctor_id" class="w-full p-2 rounded border-gray-300">
-                            <option value="">-- wybierz doktorka --</option>
-                        </select>
-                        <x-input-error class="mt-2" :messages="$errors->get('date')" />
+                    <!-- PRAWA STRONA – OBRAZEK -->
+<div class="shrink-0 flex items-center justify-center">
+                        <img src="{{ asset('images/patient-make-visit.jpg') }}"
+                             alt="Rejestracja wizyty"
+                             class="h-80">
                     </div>
-
-                    <div>
-                        <x-input-label for="appointment_day" value="Wybierz datę" />
-                        <select id="appointment_day" name="appointment_day" class="w-full p-2 rounded border-gray-300">
-                            <option value="">-- wybierz dzien --</option>
-                        </select>
-                        <x-input-error class="mt-2" :messages="$errors->get('date')" />
-                    </div>
-
-                    <div>
-                        <x-input-label for="appointment_id" value="Wybierz lekarza" />
-                        <select id="appointment_id" name="appointment_id" class="w-full p-2 rounded border-gray-300">
-                            <option value="">-- wybierz godzine --</option>
-                        </select>
-                        <x-input-error class="mt-2" :messages="$errors->get('date')" />
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        <x-primary-button>{{ __('Umów wizytę') }}</x-primary-button>
-                        @if(session('success'))
-                            <p class="text-sm text-gray-600">{{ session('success') }}</p>
-                        @endif
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const spec = document.getElementById('specialization');
@@ -67,7 +81,6 @@
             const day = document.getElementById('appointment_day');
             const time = document.getElementById('appointment_id');
 
-            // Ładuj specjalizacje
             fetch('/patient/appointments/api/specializations')
                 .then(res => res.json())
                 .then(data => {
@@ -85,32 +98,24 @@
                             doctor.innerHTML += `<option value="${d.id}">${d.name}</option>`;
                         });
                         doctor.disabled = false;
-                        day.innerHTML = '<option value="">-- wybierz lekarza --</option>';
-                        time.innerHTML = '<option value="">-- wybierz dzień --</option>';
+                        day.innerHTML = '<option value="">-- wybierz dzień --</option>';
+                        time.innerHTML = '<option value="">-- wybierz godzinę --</option>';
                         day.disabled = true;
                         time.disabled = true;
                     });
             });
 
             doctor.addEventListener('change', function () {
-                console.log(this.value);
                 fetch(`/patient/appointments/api/dates/${this.value}`)
                     .then(res => res.json())
                     .then(data => {
-                        // if (data.length = 0) {
-                            console.log(data);
-                            day.innerHTML = `<option value="">-- wybierz dzień --</option>`;
-                            data.forEach(d => {
-                                day.innerHTML += `<option value="${d}">${d}</option>`;
-                            });
-                            day.disabled = false;
-                            time.innerHTML = '<option value="">-- wybierz dzień --</option>';
-                            time.disabled = true;
-                        // } else {
-                        //     console.log(data);
-                        //     day.innerHTML = `<option value="">Brak wolnych terminów</option>`;
-                        //     time.innerHTML = '<option value="">Brak wolnych terminów</option>';
-                        // }
+                        day.innerHTML = `<option value="">-- wybierz dzień --</option>`;
+                        data.forEach(d => {
+                            day.innerHTML += `<option value="${d}">${d}</option>`;
+                        });
+                        day.disabled = false;
+                        time.innerHTML = '<option value="">-- wybierz godzinę --</option>';
+                        time.disabled = true;
                     });
             });
 
@@ -128,7 +133,4 @@
             });
         });
     </script>
-
-
-
 </x-app-layout>
