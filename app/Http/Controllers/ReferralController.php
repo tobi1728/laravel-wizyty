@@ -41,7 +41,9 @@ class ReferralController extends Controller
     {
         $request->validate([
             'appointment_id' => 'required|exists:appointments,id',
-            'reason' => 'nullable|string|max:1000',
+            'target_specialization' => 'required|string|max:255',
+            'custom_specialization' => 'nullable|string|max:255',
+            'reason' => 'nullable|string|max:1000'
         ]);
 
         $specialization = $request->target_specialization === 'custom'

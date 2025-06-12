@@ -18,10 +18,10 @@ class PatientProfileController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'pesel' => 'nullable|string|max:11',
+            'pesel' => 'nullable|string|size:11',
             'birth_date' => 'nullable|date',
-            'phone_number' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
+            'phone_number' => 'nullable|string|size:9',
+            'address' => 'nullable|string|min:20|max:255',
         ]);
 
         $patient = Auth::user()->patient;
