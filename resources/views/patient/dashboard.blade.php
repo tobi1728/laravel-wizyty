@@ -7,12 +7,14 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Dzisiaj -->
-            <div class="bg-white shadow rounded-lg p-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Następna wizyta</h3>
-                @if (!$nextAppointment)
-                    <p class="text-gray-500">Nie masz umówionej następnej wizyty.</p>
-                @else
+
+            <!-- NASTĘPNA WIZYTA -->
+            <div class="bg-white shadow rounded-lg p-6 flex justify-between">
+                <div class="grow">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Następna wizyta</h3>
+                    @if (!$nextAppointment)
+                        <p class="text-gray-500">Nie masz umówionej następnej wizyty.</p>
+                    @else
                         <div class="border-b py-2">
                             <p><strong>Godzina:</strong> {{ \Carbon\Carbon::parse($nextAppointment->appointment_date)->format('H:i') }}</p>
                             <p><strong>Lekarz:</strong> {{ $nextAppointment->doctor->user->firstName }} {{ $nextAppointment->doctor->user->lastName }}</p>
@@ -21,14 +23,20 @@
                                 <x-appointment-status :status="$nextAppointment->status->appointmentStatusName" />
                             </p>
                         </div>
-                @endif
+                    @endif
+                </div>
+                <div>
+                    <img src="{{ asset('images/patient-upcoming.jpg') }}" alt="Następna wizyta" class="pl-10 h-64 w-auto">
+                </div>
             </div>
 
-            <div class="bg-white shadow rounded-lg p-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Ostatnia wizyta</h3>
-                @if (!$lastAppointment)
-                    <p class="text-gray-500">Nie masz żadnej poprzedniej wizyty.</p>
-                @else
+            <!-- OSTATNIA WIZYTA -->
+            <div class="bg-white shadow rounded-lg p-6 flex justify-between">
+                <div class="grow">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Ostatnia wizyta</h3>
+                    @if (!$lastAppointment)
+                        <p class="text-gray-500">Nie masz żadnej poprzedniej wizyty.</p>
+                    @else
                         <div class="border-b py-2">
                             <p><strong>Godzina:</strong> {{ \Carbon\Carbon::parse($lastAppointment->appointment_date)->format('H:i') }}</p>
                             <p><strong>Lekarz:</strong> {{ $lastAppointment->doctor->user->firstName }} {{ $lastAppointment->doctor->user->lastName }}</p>
@@ -38,9 +46,13 @@
                             </p>
                             <p><strong>Notatki:</strong> {{ $lastAppointment->notes }}</p>
                         </div>
-                @endif
+                    @endif
+                </div>
+                <div>
+                    <img src="{{ asset('images/patient-past.jpg') }}" alt="Ostatnia wizyta" class="pl-10 h-64 w-auto">
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </x-app-layout>
